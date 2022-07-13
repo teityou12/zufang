@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     toHouse () {
-      this.$router.push({ name: 'house' })
+      this.$router.push('/house/' + this.house.houseCode)
     }
   }
 }

@@ -1,33 +1,35 @@
 <template>
   <div class="houseExplicit">
-    <van-nav-bar title="滨海花园" left-arrow />
+    <van-nav-bar :title="house.title" left-arrow />
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-      <van-swipe-item>1</van-swipe-item>
-      <van-swipe-item>2</van-swipe-item>
-      <van-swipe-item>3</van-swipe-item>
-      <van-swipe-item>4</van-swipe-item>
+      <van-swipe-item v-for="item in images" :key="item.id">
+        <img :src="item" />
+      </van-swipe-item>
     </van-swipe>
 
     <div class="houseDetail">
       <div class="houseTitle">
-        <h3>中铁蓝湖万嘉圆</h3>
+        <h3>{{ house.description }}</h3>
       </div>
       <div class="houseTag">
-        <span>近地铁</span>
+        <span v-if="house.inspector">{{ house.tags[0] }}</span>
       </div>
       <div class="housePrice">
         <div class="houseItem">
-          <i><span>1200</span>/月</i>
+          <i
+            ><span>{{ house.price }}</span
+            >/月</i
+          >
 
           <div>租金</div>
         </div>
         <div class="houseItem">
-          <span>三室</span>
+          <span>{{ house.roomType }}</span>
 
           <div>房型</div>
         </div>
         <div class="houseItem">
-          <span>121平米</span>
+          <span>{{ house.size }}</span>
 
           <div>面积</div>
         </div>
@@ -38,12 +40,16 @@
             <span class="itemName">装修：<i>精装</i></span>
           </div>
           <div>
-            <span class="itemName">楼层：<i>高楼层</i></span>
+            <span class="itemName"
+              >楼层：<i>{{ house.floor }}</i></span
+            >
           </div>
         </div>
         <div class="InfoItem">
           <div>
-            <span class="itemName">朝向：<i>南</i></span>
+            <span class="itemName"
+              >朝向：<i v-if="house.inspector">{{ house.oriented[0] }}</i></span
+            >
           </div>
           <div>
             <span class="itemName">类型：<i>住宅</i></span>
@@ -75,54 +81,75 @@
       </div>
     </div>
 
-    <div class="houseAbout">
+    <div class="houseAboutLike">
       <div class="aboutTop">
         <div>猜你喜欢</div>
+      </div>
+      <div class="youLike">
+        <HomeList></HomeList>
       </div>
     </div>
 
     <div class="footer">
       <van-row>
-      <van-col span="8">
-        <van-button block>收藏</van-button>
-      </van-col>
-      <van-col span="8">
-        <van-button block>在线咨询</van-button>
-      </van-col>
-      <van-col span="8">
-        <van-button type="primary" block>电话预约</van-button>
-      </van-col>
-    </van-row>
+        <van-col span="8">
+          <van-button block>收藏</van-button>
+        </van-col>
+        <van-col span="8">
+          <van-button block>在线咨询</van-button>
+        </van-col>
+        <van-col span="8">
+          <van-button type="primary" block>电话预约</van-button>
+        </van-col>
+      </van-row>
     </div>
   </div>
 </template>
 
 <script>
-import { getHouse } from '@/api/house'
+import { getHouseById } from '@/api/house'
 import HouseMap from '@/components/HouseMap'
+import HomeList from '@/components/HomeList.vue'
 export default {
+  props: {
+    houseCode: {
+      type: [Number, String],
+      required: true
+    }
+  },
   created () {
-    this.getHouse()
+    this.loadHouse()
   },
   data () {
     return {
-
+      house: {},
+      images: []
     }
   },
   methods: {
-    async getHouse () {
+    async loadHouse () {
       try {
-        const res = await getHouse(this.houseCode)
-        console.log(res)
+        const { data } = await getHouseById(this.houseCode)
+        console.log(data)
+        this.house = data.body
+        console.log(this.house)
+
+        if (data.body.houseImg instanceof Array) {
+          this.images = data.body.houseImg.map(
+            (item) => 'http://liufusong.top:8080' + item
+          )
+        } else {
+          this.images = ['http://liufusong.top:8080' + data.body.houseImg]
+        }
       } catch (err) {
-        console.log(err)
+        console.log('获取数据失败', err)
       }
     }
   },
   computed: {},
   watch: {},
   filters: {},
-  components: { HouseMap }
+  components: { HouseMap, HomeList }
 }
 </script>
 
@@ -248,6 +275,7 @@ export default {
 }
 .houseAbout {
   height: 300px;
+  z-index: 9999;
   padding: 0 30px;
   background: pink;
   .aboutTop {
@@ -260,6 +288,33 @@ export default {
       font-weight: 600;
       color: black;
     }
+  }
+  .youLike {
+    height: 830px;
+    width: 100%;
+  }
+}
+
+.houseAboutLike {
+  overflow: hidden !important;
+  height: 860px;
+
+  padding: 0 30px;
+
+  .aboutTop {
+    height: 110px;
+    padding: 30px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #dadada;
+    div {
+      font-size: 30px;
+      font-weight: 600;
+      color: black;
+    }
+  }
+  .youLike {
+    height: 830px;
+    width: 100%;
   }
 }
 .footer {

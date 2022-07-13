@@ -35,7 +35,7 @@ const routes = [
   { path: '/citylist', component: CityList, name: 'citylist' },
   { path: '/map', component: Map, name: 'map' },
   {
-    path: '/house',
+    path: '/house/:houseCode',
     component: House,
     name: 'house',
     props: true // 让路由和组件解耦
