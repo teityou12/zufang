@@ -7,6 +7,7 @@
     </van-swipe>
 
     <van-search
+      class="bgcc"
       v-model="value"
       label="北京"
       placeholder="请输入搜索关键词"
@@ -29,13 +30,13 @@
         </div>
         <p>合租</p>
       </van-grid-item>
-      <van-grid-item to="/map" >
+      <van-grid-item to="/map">
         <div class="box">
           <van-icon name="friends-o" size="30" color="#00ae66" />
         </div>
         <p>地图找房</p>
       </van-grid-item>
-      <van-grid-item to="/addroom" >
+      <van-grid-item to="/addroom">
         <div class="box">
           <van-icon name="user-o" size="30" color="#00ae66" />
         </div>
@@ -55,10 +56,10 @@
           :key="index"
         >
           <van-image :src="'http://liufusong.top:8080' + item.imgSrc" />
-          <div>
-            <span>{{ item.title }}</span>
-            <br />
-            <span>{{ item.desc }}</span>
+          <div class="txt">
+            <p>{{ item.title }}</p>
+
+            <p>{{ item.desc }}</p>
           </div>
         </van-grid-item>
       </van-grid>
@@ -122,6 +123,7 @@ export default {
   color: #9c9fa1;
   width: 680px;
   height: 60px;
+  background-color: transparent;
 }
 
 .van-icon {
@@ -175,13 +177,17 @@ p {
     flex-direction: column;
     justify-content: space-between;
     padding: 0;
-    /deep/ .van-image {
-      width: 50px;
-      height: 50px;
+
+    .van-image {
+      width: 100px;
+      height: 100px;
       margin: 0, 10px;
     }
-    /deep/ span {
-      font-size: 13px;
+    .txt {
+      /deep/ h5 {
+        font-size: 13px;
+        font-weight: 400;
+      }
     }
   }
 }

@@ -2,7 +2,15 @@
   <div>
     <van-nav-bar title="城市列表" />
 
-    <van-index-bar>
+    <van-index-bar :index-list="indexList">
+      <van-index-anchor index="热门城市"></van-index-anchor>
+
+      <van-cell
+        v-for="(item, index) in hotCityList"
+        :key="index"
+        :title="item.label"
+      />
+
       <div v-for="(item, cityIndex) in cityNameList" :key="cityIndex">
         <van-index-anchor :index="cityIndex" />
 
@@ -23,8 +31,10 @@ import { getCityList, getHotCityList } from '@/api/city'
 // list: [{},{}]
 const formatCityData = (list) => {
   const cityList = {}
-  // const cityIndex = []
   const cityNameList = {}
+  // const cityIndex = []
+  // const cityNameList = {}
+
   // 1 遍历数组
   list.forEach(item => {
     // 2 获取每个城市的首字母
@@ -41,13 +51,20 @@ const formatCityData = (list) => {
   })
 
   // 2 获取索引数据
-
+  // var arr1 = ['apple', 'banana', 'mango'];
+  // var arr2 = ['orange', ...arr1];
+  // ["orange", "apple", "banana", "mango"]
+  const indexList = Object.keys(cityList).sort()
   Object.keys(cityList).sort().forEach(item => {
     cityNameList[item] = cityList[item]
   })
+
+  // Object.assign(this.cityList, { hot: this.hotCityList })
+
   return {
-    cityList, cityNameList
+    cityList, cityNameList, indexList
   }
+
   // for (let i = 65; i <= 90; i++) {
   //   const c = String.fromCharCode(i)
   //   if (this.cityList[c]) {
@@ -55,6 +72,9 @@ const formatCityData = (list) => {
   //   }
   // }
 }
+
+// this.cityNameList[key] = this.hotCityList
+// console.log(this.hotCityList)
 // const letters = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'
 export default {
   created () {
@@ -64,7 +84,10 @@ export default {
   data () {
     return {
       cityList: {},
-      cityNameList: []
+      cityNameList: [],
+      cityIndex: [],
+      hotCityList: [],
+      indexList: []
 
     }
   },
@@ -72,10 +95,11 @@ export default {
     async getCityList () {
       try {
         const res = await getCityList()
-        const { cityList, cityNameList } = formatCityData(res.data.body)
-        console.log(cityList, cityNameList)
+        const { cityList, cityNameList, indexList } = formatCityData(res.data.body)
+        console.log(cityList, cityNameList, indexList)
         this.cityList = cityList
         this.cityNameList = cityNameList
+        this.indexList = indexList
       } catch (err) {
         console.log(err)
       }
@@ -83,16 +107,18 @@ export default {
 
     async getHotCityList () {
       try {
-        const res = await getHotCityList()
-        // const { cityList, cityNameList } = formatCityData(res.data.body)
-        // console.log(cityList, cityNameList)
-        // this.cityList = cityList
-        // this.cityNameList = cityNameList
-        console.log(res)
+        const hotres = await getHotCityList()
+        const hotCityList = hotres.data.body
+        console.log('热门城市数据:', hotCityList)
+        // this.cityList[hot] = hotCityList
+        // this.hotCityList = hotCityList
+        // console.log(this.hotCityList)
+        this.hotCityList = hotCityList
       } catch (err) {
         console.log(err)
       }
     }
+
   },
 
   computed: {
@@ -103,6 +129,9 @@ export default {
   components: {}
 
 }
+
+// this.cityList.hot = this.hotCityList.data.body
+// console.log(this.cityList)
 
 </script>
 
