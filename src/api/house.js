@@ -6,3 +6,17 @@ export const getHouseById = houseCode => {
     url: `/houses/${houseCode}`
   })
 }
+
+export const addHouseCollect = id => {
+  return request({
+    method: 'POST',
+    url: `/user/favorites/${id}`
+  })
+}
+
+export const deleteHouseCollect = id => {
+  return request({
+    method: 'DELETE',
+    url: `/user/favorites/${id}`
+  })
+}

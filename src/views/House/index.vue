@@ -75,10 +75,36 @@
       </div>
     </div>
 
-    <div class="houseAbout">
+    <div class="userAbout">
       <div class="aboutTop">
         <div>房源概况</div>
       </div>
+      <van-cell class="user-info" center :border="false">
+        <van-image
+          class="avatar"
+          slot="icon"
+          round
+          fit="cover"
+          src="http://liufusong.top:8080/img/avatar.png"
+        />
+        <div slot="title" class="user-name">王女士</div>
+        <div slot="label" class="publish-date">已认证</div>
+        <van-button
+          class="follow-btn"
+          type="info"
+          color="#3296fa"
+          round
+          size="small"
+          icon="plus"
+          >发消息</van-button
+        >
+      </van-cell>
+      <p>
+        1.周边配套齐全，地铁四号线陶然亭站，交通便利，公交云集，距离北京南站、西站都很近距离。
+        2.小区规模大，配套全年，幼儿园，体育场，游泳馆，养老院，小学。
+        3.人车分流，环境优美。
+        4.精装两居室，居家生活方便，还有一个小书房，看房随时联系。
+      </p>
     </div>
 
     <div class="houseAboutLike">
@@ -93,7 +119,13 @@
     <div class="footer">
       <van-row>
         <van-col span="8">
-          <van-button block>收藏</van-button>
+          <van-button block>
+            <CollectHouse
+              :house-id="house.houseCode"
+              v-model="house.isFavorite"
+            ></CollectHouse>
+            收藏</van-button
+          >
         </van-col>
         <van-col span="8">
           <van-button block>在线咨询</van-button>
@@ -110,6 +142,8 @@
 import { getHouseById } from '@/api/house'
 import HouseMap from '@/components/HouseMap'
 import HomeList from '@/components/HomeList.vue'
+import CollectHouse from '@/components/CollectHouse.vue'
+
 export default {
   props: {
     houseCode: {
@@ -145,11 +179,12 @@ export default {
         console.log('获取数据失败', err)
       }
     }
+
   },
   computed: {},
   watch: {},
   filters: {},
-  components: { HouseMap, HomeList }
+  components: { HouseMap, HomeList, CollectHouse }
 }
 </script>
 
@@ -275,9 +310,9 @@ export default {
 }
 .houseAbout {
   height: 300px;
-  z-index: 9999;
+
   padding: 0 30px;
-  background: pink;
+  background-color: pink;
   .aboutTop {
     height: 110px;
     padding: 30px 0;
@@ -289,9 +324,48 @@ export default {
       color: black;
     }
   }
-  .youLike {
-    height: 830px;
-    width: 100%;
+}
+.userAbout {
+  height: 600px;
+
+  padding: 0 30px;
+
+  .aboutTop {
+    height: 110px;
+    padding: 30px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #dadada;
+    div {
+      font-size: 30px;
+      font-weight: 600;
+      color: black;
+    }
+  }
+  .user-info {
+    padding: 0 32px;
+    .avatar {
+      width: 70px;
+      height: 70px;
+      margin-right: 17px;
+    }
+    .van-cell__label {
+      margin-top: 0;
+    }
+    .user-name {
+      font-size: 24px;
+      color: #3a3a3a;
+    }
+    .publish-date {
+      font-size: 23px;
+      color: #b7b7b7;
+    }
+    .follow-btn {
+      width: 170px;
+      height: 58px;
+    }
+  }
+  p {
+    font-size: 30px;
   }
 }
 
